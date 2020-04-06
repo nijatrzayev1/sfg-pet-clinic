@@ -1,10 +1,7 @@
 package guru.springframework.sfgclinic.bootstrap;
 
 import guru.springframework.sfgclinic.model.*;
-import guru.springframework.sfgclinic.services.OwnerService;
-import guru.springframework.sfgclinic.services.PetTypeService;
-import guru.springframework.sfgclinic.services.SpecialityService;
-import guru.springframework.sfgclinic.services.VetService;
+import guru.springframework.sfgclinic.services.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -17,13 +14,15 @@ public class DataLoader implements CommandLineRunner {
     private final VetService vetService;
     private final PetTypeService petService;
     private final SpecialityService specialityService;
+    private final VisitService visitService;
 
 
-    public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petService, SpecialityService specialityService) {
+    public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petService, SpecialityService specialityService, VisitService visitService) {
         this.ownerService = ownerService;
         this.vetService = vetService;
         this.petService = petService;
         this.specialityService = specialityService;
+        this.visitService = visitService;
     }
 
     @Override
@@ -76,17 +75,23 @@ public class DataLoader implements CommandLineRunner {
         Owner owner2 =  new Owner();
         owner2.setFirstName("Uluxan");
         owner2.setLastName("Rzayev");
-        owner1.setAddress("62 Zaqatala");
-        owner1.setCity("Zakatala");
-        owner1.setTelephone("987987");
+        owner2.setAddress("62 Zaqatala");
+        owner2.setCity("Zakatala");
+        owner2.setTelephone("987987");
 
         Pet uluxanPet = new Pet();
         uluxanPet.setPetType(savedCatPetType);
         uluxanPet.setOwner(owner2);
         uluxanPet.setBirthDate(LocalDate.now());
         uluxanPet.setName("Just Cat");
-        owner1.getPets().add(uluxanPet);
+        owner2.getPets().add(uluxanPet);
         ownerService.save(owner2);
+
+        Visit catVisit = new Visit();
+        catVisit.setPet(uluxanPet);
+        catVisit.setDate(LocalDate.now());
+        catVisit.setDescription("Sneezy kitty");
+        visitService.save(catVisit);
 
         System.out.println("Owners loaded..........");
         Vet vet1 = new Vet();
